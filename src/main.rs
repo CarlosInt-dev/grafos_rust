@@ -1,79 +1,44 @@
-use grafos_rust::Grafo;
+﻿mod data;
 
 fn main() {
-    println!("\n🌍 SISTEMA DE RED DE TRANSPORTE - GRAFOS EN RUST");
-    println!("═══════════════════════════════════════════════════\n");
+    println!("\n=== SISTEMA DE RED DE TRANSPORTE - EL SALVADOR ===\n");
 
-    let mut red_transporte = Grafo::new();
+    let red = data::create_transport_network();
 
-    println!("📍 Creando red de ciudades...");
-    let madrid = red_transporte.agregar_nodo("Madrid".to_string());
-    let barcelona = red_transporte.agregar_nodo("Barcelona".to_string());
-    let valencia = red_transporte.agregar_nodo("Valencia".to_string());
-    let bilbao = red_transporte.agregar_nodo("Bilbao".to_string());
-    let sevilla = red_transporte.agregar_nodo("Sevilla".to_string());
-    let malaga = red_transporte.agregar_nodo("Málaga".to_string());
+    println!("Ciudades registradas: {}", red.nodos.join(", "));
+    println!("Total de rutas: {}\n", red.contar_aristas());
 
-    println!("🔗 Agregando rutas de transporte...\n");
-    red_transporte.agregar_arista(madrid, barcelona, 620).unwrap();
-    red_transporte.agregar_arista(madrid, valencia, 360).unwrap();
-    red_transporte.agregar_arista(madrid, bilbao, 395).unwrap();
-    red_transporte.agregar_arista(barcelona, valencia, 360).unwrap();
-    red_transporte.agregar_arista(madrid, sevilla, 534).unwrap();
-    red_transporte.agregar_arista(sevilla, malaga, 215).unwrap();
-    red_transporte.agregar_arista(bilbao, madrid, 395).unwrap();
+    // BFS: San Salvador -> Ahuachapan
+    let origen  = 0; // San Salvador
+    let destino = 3; // Ahuachapan
 
-    println!("Ciudades: {}", red_transporte.nodos.join(", "));
-    println!("Total de rutas: {}\n", red_transporte.contar_aristas());
+    println!("Buscando ruta de {} a {}...\n", red.nodos[origen], red.nodos[destino]);
 
-    // ═════════════════════════════════════════
-    // BFS
-    // ═════════════════════════════════════════
-    println!("┌─────────────────────────────────────────┐");
-    println!("│  🔍 BFS: RUTA CON MENOS CONEXIONES     │");
-    println!("└─────────────────────────────────────────┘\n");
-    
-    if let Some(camino) = red_transporte.bfs(madrid, sevilla) {
-        println!("✓ Ruta de Madrid a Sevilla:");
-        print!("  Camino: ");
-        for (i, &nodo) in camino.iter().enumerate() {
-            if i > 0 { print!(" → "); }
-            print!("{}", red_transporte.nodos[nodo]);
+    match red.bfs(origen, destino) {
+        Some(camino) => {
+            println!("Ruta encontrada:");
+            for (i, &nodo) in camino.iter().enumerate() {
+                if i > 0 { print!(" -> "); }
+                print!("{}", red.nodos[nodo]);
+            }
+            println!("\nConexiones: {}", camino.len() - 1);
         }
-        println!("\n  Conexiones: {}", camino.len() - 1);
+        None => println!("No se encontro ruta."),
     }
 
-    // ═════════════════════════════════════════
-    // DFS
-    // ═════════════════════════════════════════
-    println!("\n┌─────────────────────────────────────────┐");
-    println!("│  🔍 DFS: RECORRIDO EN PROFUNDIDAD      │");
-    println!("└─────────────────────────────────────────┘\n");
-    
-    let recorrido = red_transporte.dfs(madrid);
-    println!("✓ Recorrido desde Madrid:");
-    print!("  Orden de visita: ");
+    // DFS desde San Salvador
+    println!("\nRecorrido DFS desde San Salvador:");
+    let recorrido = red.dfs(origen);
     for (i, &nodo) in recorrido.iter().enumerate() {
-        if i > 0 { print!(" → "); }
-        print!("{}", red_transporte.nodos[nodo]);
+        if i > 0 { print!(" -> "); }
+        print!("{}", red.nodos[nodo]);
     }
     println!();
 
-    // ═════════════════════════════════════════
-    // CICLOS
-    // ═════════════════════════════════════════
-    println!("\n┌─────────────────────────────────────────┐");
-    println!("│  🔄 DETECCIÓN DE CICLOS                │");
-    println!("└─────────────────────────────────────────┘\n");
-    
-    if red_transporte.tiene_ciclo() {
-        println!("⚠️  El grafo contiene ciclos");
+    // Ciclos
+    if red.tiene_ciclo() {
+        println!("\nEl grafo contiene ciclos.");
     } else {
-        println!("✓ El grafo es acíclico");
+        println!("\nEl grafo es aciclico.");
     }
-
-    println!("\n═══════════════════════════════════════════════════");
-    println!("✅ Para más ejemplos, ejecuta:");
-    println!("   cargo run --example red_social");
-    println!("   cargo run --example dependencias\n");
 }
