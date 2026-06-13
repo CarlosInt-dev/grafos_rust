@@ -1,6 +1,6 @@
 use std::collections::{HashMap, VecDeque};
 
-use crate::graph::Graph;
+use crate::graph::graph::Graph;
 
 /// Busca la ruta con menos conexiones entre `origen` y `destino`
 /// usando Búsqueda en Anchura (BFS).
@@ -43,7 +43,16 @@ pub fn bfs(graph: &Graph, origen: &str, destino: &str) -> Option<Vec<String>> {
 
                     // Si llegamos al destino, reconstruir y devolver el camino
                     if vecino == destino {
-                        return Some(reconstruir_camino(&padres, origen, destino));
+                        // Reconstruir el camino desde los padres
+                        let mut camino = Vec::new();
+                        let mut actual = destino.to_string();
+                        while actual != origen {
+                            camino.push(actual.clone());
+                            actual = padres[&actual].clone();
+                        }
+                        camino.push(origen.to_string());
+                        camino.reverse();
+                        return Some(camino);
                     }
 
                     cola.push_back(vecino.clone());
@@ -56,23 +65,7 @@ pub fn bfs(graph: &Graph, origen: &str, destino: &str) -> Option<Vec<String>> {
     None
 }
 
-/// Reconstruye el camino desde `origen` hasta `destino`
-/// usando el mapa de padres generado por BFS.
-fn reconstruir_camino(
-    padres: &HashMap<String, String>,
-    origen: &str,
-    destino: &str,
-) -> Vec<String> {
-    let mut camino = Vec::new();
-    let mut actual = destino.to_string();
-
-    // Seguir los padres desde destino hasta origen
-    while actual != origen {
-        camino.push(actual.clone());
-        actual = padres[&actual].clone();
-    }
-
-    camino.push(origen.to_string());
-    camino.reverse(); // El camino se construyó al revés
-    camino
+///Función del camino mas corto entre dos ciudades usando BFS
+pub fn ruta_mas_corta(graph: &Graph, origen: &str, destino: &str) -> Option<Vec<String>> {
+    bfs(graph, origen, destino)
 }

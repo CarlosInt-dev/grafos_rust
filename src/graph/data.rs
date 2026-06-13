@@ -12,29 +12,55 @@ pub fn create_transport_network() -> Graph {
     red.agregar_ciudad("San Miguel");
     red.agregar_ciudad("Usulutan");
     red.agregar_ciudad("San Vicente");
-    red.agregar_ciudad("Cojutepeque");
-    red.agregar_ciudad("Zacatecoluca");
+    red.agregar_ciudad("Cabañas");
+    red.agregar_ciudad("Chalatenango");
+    red.agregar_ciudad("La Paz");
+    red.agregar_ciudad("Morazan");
+    red.agregar_ciudad("La Union");
+    red.agregar_ciudad("Cuscatlan");
+
 
     // === RUTAS (bidireccionales) ===
-    red.agregar_ruta("San Salvador", "Santa Ana");
-    red.agregar_ruta("San Salvador", "Sonsonate");
-    red.agregar_ruta("San Salvador", "La Libertad");
-    red.agregar_ruta("San Salvador", "Cojutepeque");
-    red.agregar_ruta("San Salvador", "San Vicente");
+    // Zona occidental
+    red.agregar_ruta("Ahuachapan", "Santa Ana");
+    red.agregar_ruta("Ahuachapan", "Sonsonate");
 
-    red.agregar_ruta("Santa Ana", "Ahuachapan");
     red.agregar_ruta("Santa Ana", "Sonsonate");
+    red.agregar_ruta("Santa Ana", "Chalatenango");
 
-    red.agregar_ruta("Sonsonate", "Ahuachapan");
+    // Zona central
+    red.agregar_ruta("Sonsonate", "La Libertad");
 
-    red.agregar_ruta("San Vicente", "Zacatecoluca");
+    red.agregar_ruta("La Libertad", "San Salvador");
+
+    red.agregar_ruta("San Salvador", "Chalatenango");
+    red.agregar_ruta("San Salvador", "Cuscatlan");
+    red.agregar_ruta("San Salvador", "La Paz");
+    red.agregar_ruta("San Salvador", "La Libertad");
+
+    red.agregar_ruta("Chalatenango", "Cuscatlan");
+    red.agregar_ruta("Chalatenango", "Cabañas");
+
+    red.agregar_ruta("Cuscatlan", "Cabañas");
+    red.agregar_ruta("Cuscatlan", "San Vicente");
+    red.agregar_ruta("Cuscatlan", "La Paz");
+
+    red.agregar_ruta("La Paz", "San Vicente");
+
+    // Zona paracentral
+    red.agregar_ruta("San Vicente", "Cabañas");
     red.agregar_ruta("San Vicente", "Usulutan");
 
-    red.agregar_ruta("Zacatecoluca", "Usulutan");
+    // Zona oriental
+    red.agregar_ruta("Cabañas", "San Miguel");
+    red.agregar_ruta("Cabañas", "Morazan");
 
     red.agregar_ruta("Usulutan", "San Miguel");
 
-    red.agregar_ruta("Cojutepeque", "San Vicente");
+    red.agregar_ruta("San Miguel", "Morazan");
+    red.agregar_ruta("San Miguel", "La Union");
+
+    red.agregar_ruta("Morazan", "La Union");
 
     return red;
 }
